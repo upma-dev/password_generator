@@ -1,11 +1,12 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
 function App() {
   const [length, setLength] = useState(8);
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
 
-  //use Ref hook
   const passwordRef = useRef(null);
 
   const passwordGenerator = useCallback(() => {
@@ -20,7 +21,7 @@ function App() {
     }
 
     setPassword(pass);
-  }, [length, numberAllowed, charAllowed, setPassword]);
+  }, [length, numberAllowed, charAllowed]);
 
   const copyPasswordToClipboard = useCallback(() => {
     passwordRef.current?.select();
@@ -31,68 +32,85 @@ function App() {
   useEffect(() => {
     passwordGenerator();
   }, [length, numberAllowed, charAllowed, passwordGenerator]);
+
   return (
-    <>
-      <div
-        className="w-full max-w-md mx-auto shadow-md rounded-lg px-4 py-3 my-8 bg-gray-800
-      text-orange-500"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+      <motion.div
+        className="w-full max-w-md mx-auto shadow-2xl rounded-2xl px-6 py-5 bg-gray-900 text-orange-400"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 120 }}
       >
-        <h1 className="text-white text-center my-3">Password generator</h1>
-        <div className="flex-shadow rounded-lg overflow-hidden mb-4">
-          <input
-            type="text"
-            value={password}
-            className="outline-none w-full py-1 px-3"
-            placeholder="password"
-            readOnly
-            ref={passwordRef}
-          />
-          <button
+        <h1 className="text-white text-center text-3xl font-bold mb-6 drop-shadow-lg animate-pulse">
+          🔐 Password Generator
+        </h1>
+
+        <div className="flex rounded-lg overflow-hidden shadow-inner mb-4">
+          <AnimatePresence mode="wait">
+            <motion.input
+              key={password}
+              type="text"
+              value={password}
+              readOnly
+              ref={passwordRef}
+              className="outline-none w-full py-2 px-4 text-lg bg-gray-800 text-orange-300"
+              placeholder="password"
+              initial={{ opacity: 0.5 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+          </AnimatePresence>
+          <motion.button
             onClick={copyPasswordToClipboard}
-            className="outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0"
+            className="bg-blue-700 text-white px-4 py-2 hover:bg-blue-600 transition-all"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
             Copy
-          </button>
+          </motion.button>
         </div>
-        <div className="flex text-sm gap-x-2">
-          <div className="flex items-center gap-x-1">
+
+        <div className="flex flex-col space-y-4 text-sm text-white">
+          <div className="flex items-center justify-between">
+            <label className="mr-2 font-medium">Length: {length}</label>
             <input
               type="range"
               min={6}
               max={100}
               value={length}
-              className="cursor-pointer"
-              onChange={(e) => {
-                setLength(e.target.value);
-              }}
+              className="w-full ml-2 accent-orange-500 cursor-pointer"
+              onChange={(e) => setLength(Number(e.target.value))}
             />
-            <label>Length: {length}</label>
           </div>
-          <div className="flex items-center gap-x-1">
+
+          <div className="flex items-center justify-between">
+            <label htmlFor="numberInput" className="font-medium">
+              Include Numbers
+            </label>
             <input
               type="checkbox"
-              defaultChecked={numberAllowed}
               id="numberInput"
-              onChange={() => {
-                setNumberAllowed((prev) => !prev);
-              }}
+              defaultChecked={numberAllowed}
+              onChange={() => setNumberAllowed((prev) => !prev)}
+              className="accent-orange-500 w-5 h-5"
             />
-            <label htmlfor="numberInput"> Numbers</label>
           </div>
-          <div className="flex items-center gap-x-1">
+
+          <div className="flex items-center justify-between">
+            <label htmlFor="characterInput" className="font-medium">
+              Include Special Characters
+            </label>
             <input
               type="checkbox"
-              defaultChecked={charAllowed}
               id="characterInput"
-              onChange={() => {
-                setCharAllowed((prev) => !prev);
-              }}
+              defaultChecked={charAllowed}
+              onChange={() => setCharAllowed((prev) => !prev)}
+              className="accent-orange-500 w-5 h-5"
             />
-            <label htmlfor="characterInput">Characters</label>
           </div>
         </div>
-      </div>
-    </>
+      </motion.div>
+    </div>
   );
 }
 
