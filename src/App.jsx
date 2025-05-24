@@ -5,21 +5,20 @@ function App() {
   const [length, setLength] = useState(8);
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
-  const [capitalAllowed, setCapitalAllowed] = useState(true); // New State
+  const [capitalAllowed, setCapitalAllowed] = useState(false);
   const [password, setPassword] = useState("");
 
   const passwordRef = useRef(null);
 
   const passwordGenerator = useCallback(() => {
     let pass = "";
-    let str = "";
+    let str = "abcdefghijklmnopqrstuvwxyz";
     if (capitalAllowed) str += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    str += "abcdefghijklmnopqrstuvwxyz";
     if (numberAllowed) str += "0123456789";
     if (charAllowed) str += "!#@$%^&*~+_-=[]{}'";
 
     for (let i = 1; i <= length; i++) {
-      let char = Math.floor(Math.random() * str.length + 1);
+      let char = Math.floor(Math.random() * str.length);
       pass += str.charAt(char);
     }
 
@@ -44,7 +43,7 @@ function App() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120 }}
       >
-        <h1 className="text-white text-center text-3xl font-bold mb-6 drop-shadow-lg animate-pulse">
+        <h1 className="text-center text-3xl font-extrabold mb-6 bg-gradient-to-r from-pink-500 via-yellow-500 to-purple-500 text-transparent bg-clip-text drop-shadow-lg animate-pulse">
           🔐 Password Generator
         </h1>
 
@@ -87,33 +86,7 @@ function App() {
           </div>
 
           <div className="flex items-center justify-between">
-            <label htmlFor="numberInput" className="font-medium text-green-400">
-              Include Numbers
-            </label>
-            <input
-              type="checkbox"
-              id="numberInput"
-              defaultChecked={numberAllowed}
-              onChange={() => setNumberAllowed((prev) => !prev)}
-              className="accent-green-500 w-5 h-5"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label htmlFor="characterInput" className="font-medium text-yellow-400">
-              Include Special Characters
-            </label>
-            <input
-              type="checkbox"
-              id="characterInput"
-              defaultChecked={charAllowed}
-              onChange={() => setCharAllowed((prev) => !prev)}
-              className="accent-yellow-400 w-5 h-5"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label htmlFor="capitalInput" className="font-medium text-pink-400">
+            <label htmlFor="capitalInput" className="font-medium">
               Include Capital Letters
             </label>
             <input
@@ -122,6 +95,32 @@ function App() {
               defaultChecked={capitalAllowed}
               onChange={() => setCapitalAllowed((prev) => !prev)}
               className="accent-pink-500 w-5 h-5"
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label htmlFor="numberInput" className="font-medium">
+              Include Numbers
+            </label>
+            <input
+              type="checkbox"
+              id="numberInput"
+              defaultChecked={numberAllowed}
+              onChange={() => setNumberAllowed((prev) => !prev)}
+              className="accent-yellow-500 w-5 h-5"
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label htmlFor="characterInput" className="font-medium">
+              Include Special Characters
+            </label>
+            <input
+              type="checkbox"
+              id="characterInput"
+              defaultChecked={charAllowed}
+              onChange={() => setCharAllowed((prev) => !prev)}
+              className="accent-purple-500 w-5 h-5"
             />
           </div>
         </div>
