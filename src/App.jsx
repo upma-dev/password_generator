@@ -5,13 +5,16 @@ function App() {
   const [length, setLength] = useState(8);
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
+  const [capitalAllowed, setCapitalAllowed] = useState(true); // New State
   const [password, setPassword] = useState("");
 
   const passwordRef = useRef(null);
 
   const passwordGenerator = useCallback(() => {
     let pass = "";
-    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let str = "";
+    if (capitalAllowed) str += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    str += "abcdefghijklmnopqrstuvwxyz";
     if (numberAllowed) str += "0123456789";
     if (charAllowed) str += "!#@$%^&*~+_-=[]{}'";
 
@@ -21,7 +24,7 @@ function App() {
     }
 
     setPassword(pass);
-  }, [length, numberAllowed, charAllowed]);
+  }, [length, numberAllowed, charAllowed, capitalAllowed]);
 
   const copyPasswordToClipboard = useCallback(() => {
     passwordRef.current?.select();
@@ -31,7 +34,7 @@ function App() {
 
   useEffect(() => {
     passwordGenerator();
-  }, [length, numberAllowed, charAllowed, passwordGenerator]);
+  }, [length, numberAllowed, charAllowed, capitalAllowed, passwordGenerator]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
@@ -84,7 +87,7 @@ function App() {
           </div>
 
           <div className="flex items-center justify-between">
-            <label htmlFor="numberInput" className="font-medium">
+            <label htmlFor="numberInput" className="font-medium text-green-400">
               Include Numbers
             </label>
             <input
@@ -92,12 +95,12 @@ function App() {
               id="numberInput"
               defaultChecked={numberAllowed}
               onChange={() => setNumberAllowed((prev) => !prev)}
-              className="accent-orange-500 w-5 h-5"
+              className="accent-green-500 w-5 h-5"
             />
           </div>
 
           <div className="flex items-center justify-between">
-            <label htmlFor="characterInput" className="font-medium">
+            <label htmlFor="characterInput" className="font-medium text-yellow-400">
               Include Special Characters
             </label>
             <input
@@ -105,7 +108,20 @@ function App() {
               id="characterInput"
               defaultChecked={charAllowed}
               onChange={() => setCharAllowed((prev) => !prev)}
-              className="accent-orange-500 w-5 h-5"
+              className="accent-yellow-400 w-5 h-5"
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label htmlFor="capitalInput" className="font-medium text-pink-400">
+              Include Capital Letters
+            </label>
+            <input
+              type="checkbox"
+              id="capitalInput"
+              defaultChecked={capitalAllowed}
+              onChange={() => setCapitalAllowed((prev) => !prev)}
+              className="accent-pink-500 w-5 h-5"
             />
           </div>
         </div>
